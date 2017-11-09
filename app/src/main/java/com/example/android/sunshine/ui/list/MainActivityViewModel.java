@@ -14,33 +14,32 @@
  * limitations under the License.
  */
 
-package com.example.android.sunshine.ui.detail;
+package com.example.android.sunshine.ui.list;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import com.example.android.sunshine.data.database.WeatherEntry;
 
 import com.example.android.sunshine.data.SunshineRepository;
+import com.example.android.sunshine.data.database.ListWeatherEntry;
 
-import java.util.Date;
+import java.util.List;
 
 /**
- * Factory method that allows us to create a ViewModel with a constructor that takes a
- * {@link SunshineRepository} and an ID for the current {@link WeatherEntry}
+ * {@link ViewModel} for {@link MainActivity}
  */
-public class DetailViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+class MainActivityViewModel extends ViewModel {
 
     private final SunshineRepository mRepository;
-    private final Date mDate;
+    private final LiveData<List<ListWeatherEntry>> mForecast;
 
-    public DetailViewModelFactory(SunshineRepository repository, Date date) {
-        this.mRepository = repository;
-        this.mDate = date;
+    public MainActivityViewModel(SunshineRepository repository) {
+        mRepository = repository;
+        mForecast = mRepository.getCurrentWeatherForecasts();
     }
 
-    @Override
-    public <T extends ViewModel> T create(Class<T> modelClass) {
-        //noinspection unchecked
-        return (T) new DetailActivityViewModel(mRepository, mDate);
+    public LiveData<List<ListWeatherEntry>> getForecast() {
+        return mForecast;
     }
+
+
 }
