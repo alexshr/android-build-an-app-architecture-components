@@ -15,10 +15,10 @@
  */
 package com.example.android.sunshine.ui.list;
 
-import android.arch.lifecycle.LifecycleActivity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -34,14 +34,13 @@ import java.util.Date;
 /**
  * Displays a list of the next 14 days of forecasts
  */
-public class MainActivity extends LifecycleActivity implements
+public class MainActivity extends AppCompatActivity implements
         ForecastAdapter.ForecastAdapterOnItemClickHandler {
 
     private ForecastAdapter mForecastAdapter;
     private RecyclerView mRecyclerView;
     private int mPosition = RecyclerView.NO_POSITION;
     private ProgressBar mLoadingIndicator;
-    private MainActivityViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +103,9 @@ public class MainActivity extends LifecycleActivity implements
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
         mRecyclerView.setAdapter(mForecastAdapter);
         MainViewModelFactory factory = InjectorUtils.provideMainActivityViewModelFactory(this.getApplicationContext());
-        mViewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
+        MainActivityViewModel viewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel.class);
 
-        mViewModel.getForecast().observe(this, weatherEntries -> {
+        viewModel.getForecast().observe(this, weatherEntries -> {
             mForecastAdapter.swapForecast(weatherEntries);
             if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
             mRecyclerView.smoothScrollToPosition(mPosition);
